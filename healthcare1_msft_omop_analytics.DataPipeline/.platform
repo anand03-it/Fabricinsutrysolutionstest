@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "healthcare1_msft_omop_analytics",
+    "description": "This pipeline ingests the clinical FHIR ndjson data into Delta tables in the bronze lakehouse, flattens the data from the bronze lakehouse to the silver lakehouse, and then transforms the data from the silver lakehouse to the OMOP Gold lakehouse."
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fee532a7-10f8-a491-4619-3da029df6540"
+  }
+}

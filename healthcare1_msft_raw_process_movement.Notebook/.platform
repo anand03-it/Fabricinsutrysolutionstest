@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "healthcare1_msft_raw_process_movement"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "5b8fbc55-5af2-829b-41f7-a9077eec1440"
+  }
+}

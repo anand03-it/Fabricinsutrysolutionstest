@@ -1,0 +1,91 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "5b8fbc55-5af2-829b-41f7-a9077eec1440",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "inline_params": {
+              "value": "{\"pipeline_runId\":\"@{pipeline().RunId}\",\"pipeline_name\":\"@{pipeline().PipelineName}\"}",
+              "type": "string"
+            }
+          }
+        },
+        "name": "raw_process_movement",
+        "description": "This notebook will leverage the Healthcare Data Solutions library to move/extract (extract ZIP files and move) files for multiple HDS modalities, which contain various namespaces and file extensions. This framework will move/extract (extract ZIP files and move) files based on the 'file_orchestration_config' configuration, which contains mapping details such as modality, modality_format, extension etc.\nPlease note that there should not be more than one instance of this notebook running as this will cause inconsistent results.",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "a7588cb6-4d08-badf-44f5-ceac7ffbc6da",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "inline_params": {
+              "value": "{\"pipeline_runId\":\"@{pipeline().RunId}\",\"pipeline_name\":\"@{pipeline().PipelineName}\"}",
+              "type": "string"
+            }
+          }
+        },
+        "name": "fhir_ndjson_bronze_ingestion",
+        "description": "This notebook activity facilitates the ingestion of FHIR ndjson data into Delta tables within the bronze lakehouse.\nPlease note that there should not be more than one instance of this notebook running as this will cause inconsistent results.",
+        "dependsOn": [
+          {
+            "activity": "raw_process_movement",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "1f43212b-86da-87ea-4fd5-a19c49caf68c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "inline_params": {
+              "value": "{\"pipeline_runId\":\"@{pipeline().RunId}\",\"pipeline_name\":\"@{pipeline().PipelineName}\"}",
+              "type": "string"
+            }
+          }
+        },
+        "name": "bronze_silver_flatten",
+        "description": "This notebook activity transforms and flattens the data from the bronze lakehouse and ingests the data into the silver lakehouse.\nPlease note that there should not be more than one instance of this notebook running as this will cause inconsistent results.",
+        "dependsOn": [
+          {
+            "activity": "fhir_ndjson_bronze_ingestion",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "65d7e4ab-f09b-a256-45a0-30bcb4310d70",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "inline_params": {
+              "value": "{\"pipeline_runId\":\"@{pipeline().RunId}\",\"pipeline_name\":\"@{pipeline().PipelineName}\"}",
+              "type": "string"
+            }
+          }
+        },
+        "name": "omop_silver_gold_transformation",
+        "description": "This notebook activity transforms data from the silver lakehouse to the OMOP Common Data Model and ingest the data into the Gold lakehouse.\nPlease note that there should not be more than one instance of this notebook running as this will cause inconsistent results.",
+        "dependsOn": [
+          {
+            "activity": "bronze_silver_flatten",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
